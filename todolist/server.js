@@ -1,26 +1,30 @@
 const path = require("path");
+
 const express = require("express");
 const bodyParser = require("body-parser");
-const { setStatics } = require('./utils/statics');
+
+const { setStatics } = require("./utils/statics");
+const adminRoutes = require("./routes/admin");
+const indexRoutes = require("./routes/index");
 
 const app = express();
 
-app.use(bodyParser.urlencoded({extends : false}))
+//Middlewares
+app.use(bodyParser.urlencoded({ extended: false }));
+//End of middleware
 
+//EJS
+app.set("view engine", "ejs");
+app.set("views", "views");
+//End of EJS
 
-// app.use(express.static(path.join(__dirname, 'public')))
-// app.use(express.static(path.join(__dirname, 'node-module', 'boostrap-v4-rtl', 'dist')))
-// app.use(express.static(path.join(__dirname, 'node-module', 'fooont-awesome')))
+//Statics
+setStatics(app);
 
-setStatics()
+//Routes
+app.use(indexRoutes);
+app.use("/admin", adminRoutes);
 
+//End of routes
 
-app.get('/', (req, res) => {
-    res.render('index', {pageTitle: "کارهای روزمره"})
-})
-
-app.set('views engine', 'ejs')
-app.set('views', 'views')
-
-
-app.listen(3000 , () => console.log('server is running'))
+app.listen(3000, () => console.log(`Server is running.`));
